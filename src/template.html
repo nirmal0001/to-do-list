@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ToDoList</title>
+
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="name">
+        <img src="assets/icons/profile-circle.svg" alt="profile icon" width="24px" class="profile">
+        <p>Nimma</p>
+      </div>
+      <div>
+        <img src="assets/icons/hamburger-menu.svg" alt="menu icon" width="24px" class="menu">
+      </div>
+    </div>
+    <div class="nav">
+      <div class="tasks">
+        <h3>tasks</h3>
+        <ul>
+          <li data-type="create" data-slected="task"><img src="assets/icons/add-circle.svg" alt="add task button" width="24px">add task</li>
+          <li data-type="view" data-slected="toady"><img src="assets/icons/calendar.svg" alt="toady tasks icon" width="24px">toady</li>
+          <li data-type="view" data-slected="upcoming"><img src="assets/icons/calendar-search.svg" alt="upcoming task icon" width="24px">upcoming</li>        </ul>
+      </div>
+      <div class="projects">
+        <h3>projects</h3>
+        <ul>
+          <li data-type="create" data-slected="project"><img src="assets/icons/add-circle.svg" alt="add project icon" width="24px">add project</li>
+          <li data-type="select" data-slected="default"><img src="assets/icons/projects.svg" alt="project icon" width="24px">default</li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+  <main>
+    <!-- all main content -->
+    <h2>Tasks</h2>
+    <div class="content">
+             
+   <div data-group="default" data-task-id="3" class="card">
+  <!-- This has to match the ID of the task in the array -->
+  <h3 class="card-title">Shopping list</h3>
+
+  <div class="card-main">
+    <div class="desc">I need to buy some grocery from Vishal Mega Mart</div>
+    <div class="note">Make sure to get ketchup</div>
+
+    <div class="checklist">
+      <ul class="checklist-list">
+        <li>
+          <input
+            type="checkbox"
+            data-selected="checkbox"
+            data-task-id="3"
+            data-project="default"
+            data-checklist-id="1"
+            checked
+          >
+          <span>Tomato</span>
+          <img
+            src="assets/icons/delete.svg"
+            width="16px"
+            alt="delete checklist item"
+            data-selected="delete-checklist"
+            data-task-id="3"
+            data-project="default"
+            data-checklist-id="1"
+          >
+        </li>
+      </ul>
+
+      <button
+        type="button"
+        data-action="add-checklist"
+        data-task-id="3"
+        data-project="default"
+      >
+        <img src="assets/icons/add-circle.svg" alt="add checklist item" width="24px">
+        Add item
+      </button>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <input type="date" disabled value="2000-10-20">
+
+    <div data-task-id="3">
+      <select
+        data-type="priority"
+        name="priority"
+        data-task-id="3"
+        data-project="default"
+      >
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+
+      <button
+        type="button"
+        data-selected="edit"
+        data-task-id="3"
+        data-project="default"
+      >
+        <img src="assets/icons/edit.svg" alt="edit button" width="24px">
+      </button>
+
+      <button
+        type="button"
+        data-selected="delete"
+        data-task-id="3"
+        data-project="default"
+      >
+        <img src="assets/icons/delete.svg" alt="delete button" width="24px">
+      </button>
+    </div>
+  </div>
+</div>
+
+
+    </div>
+  </main>
+</body>
+</html>
