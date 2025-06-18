@@ -1,6 +1,9 @@
 import "./reset.css"
 import "./styles.css"
 
+import "./dilog.js"
+
+import { parse as dateParse } from "date-fns"
 // Classes:
 // - Todo
 //   - properties: title, desc, date, priority[high, low, medium color based], notes, checklist[]

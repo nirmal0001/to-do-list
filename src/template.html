@@ -21,15 +21,15 @@
       <div class="tasks">
         <h3>tasks</h3>
         <ul>
-          <li data-type="create" data-slected="task"><img src="assets/icons/add-circle.svg" alt="add task button" width="24px">add task</li>
-          <li data-type="view" data-slected="toady"><img src="assets/icons/calendar.svg" alt="toady tasks icon" width="24px">toady</li>
-          <li data-type="view" data-slected="upcoming"><img src="assets/icons/calendar-search.svg" alt="upcoming task icon" width="24px">upcoming</li>        </ul>
+          <li data-type="create" data-selected="task" class="create-task-button"><img src="assets/icons/add-circle.svg" alt="add task button" width="24px">add task</li>
+          <li data-type="view" data-selected="toady"><img src="assets/icons/calendar.svg" alt="toady tasks icon" width="24px">toady</li>
+          <li data-type="view" data-selected="upcoming"><img src="assets/icons/calendar-search.svg" alt="upcoming task icon" width="24px">upcoming</li>        </ul>
       </div>
       <div class="projects">
         <h3>projects</h3>
         <ul>
-          <li data-type="create" data-slected="project"><img src="assets/icons/add-circle.svg" alt="add project icon" width="24px">add project</li>
-          <li data-type="select" data-slected="default"><img src="assets/icons/projects.svg" alt="project icon" width="24px">default</li>
+          <li data-type="create" data-selected="project"><img src="assets/icons/add-circle.svg" alt="add project icon" width="24px">add project</li>
+          <li data-type="select" data-selected="default"><img src="assets/icons/projects.svg" alt="project icon" width="24px">default</li>
         </ul>
       </div>
     </div>
@@ -117,6 +117,52 @@
       </button>
     </div>
   </div>
+
+
+  <dialog class="task-dialog">
+    <div class="title">
+        <h3>add task</h3> <img class="dialog-close" src="assets/icons/close.svg" alt="close button" width="24px">
+    </div>
+    <form id="project-selection">
+      <label>
+        Project:
+        <select name="project" required>
+          <option value="default" selected>Default</option>
+          <option value="other">Other</option>
+        </select>
+      </label>
+
+      <label>
+        Title:
+        <input type="text" name="title" required>
+      </label>
+
+      <label>
+        Description:
+        <textarea name="description" rows="3"></textarea>
+      </label>
+
+      <label>
+        Note:
+        <input type="text" name="note">
+      </label>
+      <label>
+        Due Date:
+        <input type="date" name="dueDate" required>
+      </label>
+      <label>
+        Priority:
+        <select name="priority">
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+      </label>
+    </form>
+
+    <button type="submit" form="project-selection">Submit</button>
+
+  </dialog>
 </div>
 
 
