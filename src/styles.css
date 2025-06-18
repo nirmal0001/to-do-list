@@ -261,3 +261,46 @@ button[type="submit"]:hover {
 }
 
 /* diloag css end */
+
+/* delete project button */
+#delete-project {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
+    padding: 6px 12px;
+    gap: 6px;
+
+    border: 2px solid var(--color-input-border);
+    border-radius: 0.5rem;
+
+    background-color: var(--color-surface);
+    color: var(--color-text, #333);
+    font-weight: 500;
+    font-size: 0.95rem;
+
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Hover effect */
+#delete-project:hover {
+    background-color: var(--color-danger-bg, #ffe5e5);
+    color: var(--color-danger-text, #b00020);
+    border-color: var(--color-danger-border, #ff4d4d);
+}
+
+/* Active/click effect */
+#delete-project:active {
+    transform: scale(0.98);
+}
+
+/* Focus (keyboard accessibility) */
+#delete-project:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.4);
+}
+
+ /* end delete button */
