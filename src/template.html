@@ -28,7 +28,7 @@
       <div class="projects">
         <h3>projects</h3>
         <ul>
-          <li data-type="create" data-selected="project"><img src="assets/icons/add-circle.svg" alt="add project icon" width="24px">add project</li>
+          <li data-type="create" data-selected="project" class="create-project-button"><img src="assets/icons/add-circle.svg" alt="add project icon" width="24px">add project</li>
           <li data-type="select" data-selected="default"><img src="assets/icons/projects.svg" alt="project icon" width="24px">default</li>
         </ul>
       </div>
@@ -123,7 +123,7 @@
     <div class="title">
         <h3>add task</h3> <img class="dialog-close" src="assets/icons/close.svg" alt="close button" width="24px">
     </div>
-    <form id="project-selection">
+    <form id="task-selection">
       <label>
         Project:
         <select name="project" required>
@@ -157,6 +157,22 @@
           <option value="medium">Medium</option>
           <option value="low">Low</option>
         </select>
+      </label>
+    </form>
+
+    <button type="submit" form="task-selection">Submit</button>
+
+  </dialog>
+
+
+  <dialog class="project-dialog">
+    <div class="title">
+        <h3>add project</h3> <img class="dialog-close2" src="assets/icons/close.svg" alt="close button" width="24px">
+    </div>
+    <form id="project-selection">
+      <label>
+        Name:
+        <input type="text" name="title" required>
       </label>
     </form>
 

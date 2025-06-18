@@ -153,6 +153,7 @@ class ProjectManager {
 
 
 // - UI Module
+//   - takes default project name to re render page full
 //   - display projects, todos, and forms
 //   - display only toady todos or upcoming when clcked
 //   - chnage project when clicked

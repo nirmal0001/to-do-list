@@ -192,17 +192,20 @@ dialog:not([open]) {
     pointer-events: none;
 }
 
-.task-dialog > .title {
+.task-dialog > .title ,
+.project-dialog > .title{
     display: flex;
     justify-content: space-between;
 }
 
-.task-dialog > .title  > h3 {
+.task-dialog > .title  > h3,
+.project-dialog > .title > h3{
     flex: 1;
     text-align: center;
 }
 
-form#project-selection {
+form#project-selection,
+form#task-selection {
   background-color: var(--color-surface);
   padding: 1.5rem;
   border: 1px solid var(--color-border);
@@ -217,7 +220,8 @@ form#project-selection {
   color: var(--color-text);
 }
 
-form#project-selection label {
+form#project-selection label,
+form#task-selection label {
   display: flex;
   flex-direction: column;
   font-size: 0.95rem;
@@ -226,7 +230,10 @@ form#project-selection label {
 
 form#project-selection input,
 form#project-selection textarea,
-form#project-selection select {
+form#project-selection select,
+form#task-selection input,
+form#task-selection textarea,
+form#task-selection select {
   background-color: var(--color-input-bg);
   border: 1px solid var(--color-input-border);
   border-radius: 6px;
@@ -237,7 +244,10 @@ form#project-selection select {
 
 form#project-selection input:focus,
 form#project-selection textarea:focus,
-form#project-selection select:focus {
+form#project-selection select:focus,
+form#task-selection input:focus,
+form#task-selection textarea:focus,
+form#task-selection select:focus {
   outline: none;
   border-color: var(--color-primary);
   box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
