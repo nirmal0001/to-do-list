@@ -141,6 +141,12 @@ class ProjectManager {
         this.save();
     }
 
+    resetProject(name) {
+        this.projects = this.projects.find(p => p.name === name);
+        this.projects.todos = [];
+        this.save();
+    }
+
     save() {
         const exportData = this.projects.map(e => {
             return {
@@ -172,6 +178,13 @@ class UiManager{
         // manager
         this.projectManager = new ProjectManager()
 
+        // forms and dilog
+        this.taskFormButton = document.querySelector('.task-selection')
+        this.taskDialog = document.querySelector('.task-dialog')
+        this.taskDialogClose = document.querySelector('.dialog-close')
+        this.projectFormButton = document.querySelector('..project-selection')
+        this.projectDialog = document.querySelector('.project-dialog')
+        this.projectDialogClose = document.querySelector('.dialog-close2')
     }
 
     init(){
@@ -184,24 +197,61 @@ class UiManager{
         this.upcomingTaskButton.dataset.project = project
 
         // update project selection button
+        this.renderSidebar()
+
+
+    }
+
+    renderContent(project='default', filter='all'){
+        // render notes + update delete project button
+        this.projectDeleteButton.dataset.project = project
+
+        let empty
+    }
+
+    renderSidebar(){
         this.projectSelectionUl.innerHTML = ''
         for (const project of this.projectManager.projects){
+            let projectName = project.name
             let liElement = document.createElement('li')
             let imgElement = document.createElement('img')
             liElement.dataset.type = 'select'
-            liElement.dataset.selected = project.name
+            liElement.dataset.selected = projectName
             imgElement.src = projectIcon
             imgElement.alt = 'project icon'
             imgElement.width = '24'
             liElement.appendChild(imgElement)
-            liElement.append(project.name)
-            this.addEventHandler(liElement, 'click', project.name)
+            liElement.append(projectName)
+            liElement.addEventListener('click', () => this.render(projectName))
             this.projectSelectionUl.appendChild(liElement)
         }
     }
 
-    addEventHandler(elem, eventType, data){
-        elem.addEventListener(eventType, () => this.render(data))
+    assignEvent(){
+        this.toadyTaskButton.addEventListener('click', (e) => {
+            let data = e.target.dataset
+            this.renderContent(data.project, 'today')
+        })
+
+        this.upcomingTaskButton.addEventListener('click', (e) => {
+            let data = e.target.dataset
+            this.renderContent(data.project, 'upcoming')
+        })
+
+        this.deleteProject.addEventListener('click', (e) => {
+            let projectName = e.target.dataset.project
+            if (projectName == 'default'){
+                let answer = confirm('default project cant be deleted only reset\nOk to reset and Cancel to close')
+                if (answer === true){
+                    this.projectManager.resetProject(projectName)
+                }
+                return
+            }
+            this.projectManager.deleteProject(projectName)
+        })
+
+        // assign dialog and formus
+
     }
 }
 
