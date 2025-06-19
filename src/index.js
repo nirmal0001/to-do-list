@@ -3,6 +3,7 @@ import "./styles.css"
 
 import "./dilog.js"
 import {form } from "./dilog.js"
+import projectIcon from "./assets/icons/projects.svg"
 import { parse as dateParse , format} from "date-fns"
 // Classes:
 // - Todo
@@ -118,7 +119,7 @@ class ProjectManager {
 
     restoreProjects() {
         let raw = localStorage.getItem('Projects');
-        if (!raw) return [];
+        if (!raw) return [new Project('default')];
 
         try {
             let parsed = JSON.parse(raw);
@@ -151,7 +152,61 @@ class ProjectManager {
     }
 }
 
+class UiManager{
+    constructor(){
+        // nav bar tasks buttons
+        this.createTaskButton = document.querySelector('.create-task-button')
+        this.toadyTaskButton = document.querySelector('.toady-task')
+        this.upcomingTaskButton = document.querySelector('.upcoming-task')
 
+        // nav bar projects buttons
+        this.createProjectButton = document.querySelector('.create-project-button')
+        this.projectSelectionUl = document.querySelector('.project-selection-button')
+
+        // project delete button
+        this.projectDeleteButton = document.querySelector('#delete-project')
+
+        // main content
+        this.contentDiv = document.querySelector('.content')
+
+        // manager
+        this.projectManager = new ProjectManager()
+
+    }
+
+    init(){
+        this.render()
+    }
+
+    render(project='default', filter='all'){
+        // update data for nav tasks
+        this.toadyTaskButton.dataset.project = project
+        this.upcomingTaskButton.dataset.project = project
+
+        // update project selection button
+        this.projectSelectionUl.innerHTML = ''
+        for (const project of this.projectManager.projects){
+            let liElement = document.createElement('li')
+            let imgElement = document.createElement('img')
+            liElement.dataset.type = 'select'
+            liElement.dataset.selected = project.name
+            imgElement.src = projectIcon
+            imgElement.alt = 'project icon'
+            imgElement.width = '24'
+            liElement.appendChild(imgElement)
+            liElement.append(project.name)
+            this.addEventHandler(liElement, 'click', project.name)
+            this.projectSelectionUl.appendChild(liElement)
+        }
+    }
+
+    addEventHandler(elem, eventType, data){
+        elem.addEventListener(eventType, () => this.render(data))
+    }
+}
+
+const manager = new UiManager()
+manager.init()
 // - UI Module
 //   - takes default project name to re render page full
 //   - display projects, todos, and forms
