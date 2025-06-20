@@ -7,19 +7,19 @@ const dialogClose = document.querySelector('.dialog-close')
 const dialogClose2 = document.querySelector('.dialog-close2')
 const form = document.querySelector("form#project-selection")
 console.log(dialogProjectSelection)
-createTaskButton.addEventListener('click', (e) => {
-    console.log(e.target.dataset)
-    dialog.showModal()
-}
-)
-createTaskButton2.addEventListener('click', () => dialog2.showModal())
+// createTaskButton.addEventListener('click', (e) => {
+//     console.log(e.target.dataset)
+//     dialog.showModal()
+// }
+// )
+// createTaskButton2.addEventListener('click', () => dialog2.showModal())
 
-dialogClose.addEventListener('click', () => {
-    dialog.close()
-})
+// dialogClose.addEventListener('click', () => {
+//     dialog.close()
+// })
 
-dialogClose2.addEventListener('click', () => {
-    dialog2.close()})
+// dialogClose2.addEventListener('click', () => {
+//     dialog2.close()})
 // form.addEventListener('submit', (e) => {
 //     e.preventDefault()
 //     const formData = new FormData(e.target)

@@ -1,8 +1,8 @@
 import "./reset.css"
 import "./styles.css"
 
-import "./dilog.js"
-import {form } from "./dilog.js"
+// import "./dilog.js"
+// import {form } from "./dilog.js"
 import projectIcon from "./assets/icons/projects.svg"
 import { parse as dateParse , format} from "date-fns"
 // Classes:
@@ -142,8 +142,8 @@ class ProjectManager {
     }
 
     resetProject(name) {
-        this.projects = this.projects.find(p => p.name === name);
-        this.projects.todos = [];
+        let defaultProject = this.projects.find(p => p.name === name);
+        defaultProject = [];
         this.save();
     }
 
@@ -179,30 +179,34 @@ class UiManager{
         this.projectManager = new ProjectManager()
 
         // forms and dilog
-        this.taskFormButton = document.querySelector('.task-selection')
+        this.taskFormButton = document.querySelector('#task-selection')
         this.taskDialog = document.querySelector('.task-dialog')
         this.taskDialogClose = document.querySelector('.dialog-close')
-        this.projectFormButton = document.querySelector('..project-selection')
+        this.taskProjectSelction = document.querySelector('select[name="project"')
+        this.projectFormButton = document.querySelector('#project-selection')
         this.projectDialog = document.querySelector('.project-dialog')
         this.projectDialogClose = document.querySelector('.dialog-close2')
     }
 
     init(){
         this.render()
+        this.assignEvent()
     }
 
     render(project='default', filter='all'){
         // update data for nav tasks
         this.toadyTaskButton.dataset.project = project
         this.upcomingTaskButton.dataset.project = project
-
+        this.projectDeleteButton.dataset.project = project
         // update project selection button
         this.renderSidebar()
+        this.renderTaskSelection()
+        this.renderTasks(project, filter)
 
 
     }
 
-    renderContent(project='default', filter='all'){
+    renderTasks(project='default', filter='all'){
         // render notes + update delete project button
         this.projectDeleteButton.dataset.project = project
 
@@ -212,9 +216,9 @@ class UiManager{
     renderSidebar(){
         this.projectSelectionUl.innerHTML = ''
         for (const project of this.projectManager.projects){
-            let projectName = project.name
-            let liElement = document.createElement('li')
-            let imgElement = document.createElement('img')
+            const projectName = project.name
+            const liElement = document.createElement('li')
+            const imgElement = document.createElement('img')
             liElement.dataset.type = 'select'
             liElement.dataset.selected = projectName
             imgElement.src = projectIcon
@@ -229,29 +233,73 @@ class UiManager{
 
     assignEvent(){
         this.toadyTaskButton.addEventListener('click', (e) => {
-            let data = e.target.dataset
-            this.renderContent(data.project, 'today')
+            let data = e.currentTarget.dataset
+            this.renderTasks(data.project, 'today')
         })
 
         this.upcomingTaskButton.addEventListener('click', (e) => {
-            let data = e.target.dataset
-            this.renderContent(data.project, 'upcoming')
+            let data = e.currentTarget.dataset
+            this.renderTasks(data.project, 'upcoming')
         })
 
-        this.deleteProject.addEventListener('click', (e) => {
-            let projectName = e.target.dataset.project
-            if (projectName == 'default'){
-                let answer = confirm('default project cant be deleted only reset\nOk to reset and Cancel to close')
-                if (answer === true){
-                    this.projectManager.resetProject(projectName)
+        this.projectDeleteButton.addEventListener('click', (e) => {
+            const projectName = e.currentTarget.dataset.project;
+
+            if (projectName === 'default') {
+                const answer = confirm('The default project cannot be deleted.\nPress OK to reset it or Cancel to close.');
+                if (answer === true) {
+                    this.projectManager.resetProject(projectName);
                 }
-                return
+            } else {
+                const answer = confirm(`Press OK to delete the project: "${projectName}".`);
+                if (answer === true) {
+                    this.projectManager.deleteProject(projectName);
+                    this.render('default')
+                    // remove from task dilog form
+              
+                }
             }
-            this.projectManager.deleteProject(projectName)
-        })
+        });
 
         // assign dialog and formus
+        this.createTaskButton.addEventListener('click', () => this.taskDialog.showModal())
+        this.taskDialogClose.addEventListener('click', () => this.taskDialog.close())
+        this.createProjectButton.addEventListener('click', () => this.projectDialog.showModal())
+        this.projectDialogClose.addEventListener('click', () => this.projectDialog.close())
+        this.taskFormButton.addEventListener('submit', (e) => this.handleTaskForm(e))
+        this.projectFormButton.addEventListener('submit', (e) => this.handleProjectForm(e))
+    }
 
+    handleTaskForm(e){
+        e.preventDefault()
+        const formData = new FormData(e.target)
+        const data = Object.fromEntries(formData.entries());
+        console.log(data)
+        this.taskDialog.close()
+        // work on this and render tasks
+    }
+
+    handleProjectForm(e){
+        e.preventDefault()
+        const formData = new FormData(e.target)
+        const data = Object.fromEntries(formData.entries());
+        const projectName = data.title
+        this.projectDialog.close()
+        if (this.projectManager.projects.find(p => p.name == projectName)){
+            alert('project already exists')
+        }
+        this.projectManager.createProject(projectName)
+        this.render()
+    }
+
+    renderTaskSelection(){
+        for (const project  of this.projectManager.projects){
+            const projectName = project.name
+            const option = document.createElement('option')
+            option.innerText= projectName
+            option.value = projectName
+            this.taskProjectSelction.appendChild(option)
+        }
     }
 }
 
