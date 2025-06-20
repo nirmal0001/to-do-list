@@ -209,8 +209,7 @@ class UiManager{
     renderTasks(project='default', filter='all'){
         // render notes + update delete project button
         this.projectDeleteButton.dataset.project = project
-
-        let empty
+        // TODO complete this
     }
 
     renderSidebar(){
@@ -276,7 +275,7 @@ class UiManager{
         const data = Object.fromEntries(formData.entries());
         console.log(data)
         this.taskDialog.close()
-        // work on this and render tasks
+        // TODO work on this and render tasks
     }
 
     handleProjectForm(e){
