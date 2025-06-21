@@ -211,11 +211,25 @@ class UiManager{
 
     renderTasks(project='default', filter='all'){
         // empty the content
-        // this.contentDiv.innerHTML = ''
+        this.contentDiv.innerHTML = ''
         // render notes + update delete project button
         this.projectDeleteButton.dataset.project = project
         let projectData = this.projectManager.projects.find(p => p.name == project)
-        projectData.todos.forEach((p, taskIndex) => {
+        let filterData
+        switch (filter){
+            case 'today':
+                const today = new Date();
+                filterData = projectData.todos.filter(p => p.date.getDate() === today.getDate())
+                break
+
+            case 'upcoming':
+                filterData = projectData.todos.filter(p => p.date > new Date())
+                break
+
+            default:
+                filterData = projectData.todos
+        }
+        filterData.forEach((p, taskIndex) => {
             // create outer div 
             let card = document.createElement('div')
             card.dataset.group = project
@@ -239,7 +253,7 @@ class UiManager{
             desc.className = 'desc'
             desc.innerText = p.desc
             note.className = 'note'
-            note.innerText = p.title
+            note.innerText = p.notes
             mainCard.appendChild(desc)
             mainCard.appendChild(note)
             
@@ -249,7 +263,7 @@ class UiManager{
 
             let checklistList = document.createElement('ul')
             checklistList.className = 'checklist-list'
-            // TODO filter bellow list later
+
             p.checklist.forEach((p, index) => {
                 let li = document.createElement('li')
                 let input = document.createElement('input')
@@ -267,12 +281,12 @@ class UiManager{
                 li.appendChild(img)
                 checklistList.appendChild(li)
                 input.addEventListener('click', (e) => {
-                    projectData.todos[taskIndex].checklist[index].checked = e.currentTarget.checked
+                    filterData[taskIndex].checklist[index].checked = e.currentTarget.checked
                     this.projectManager.save()
                     this.renderTasks(project, filter)
                 })
                 img.addEventListener('click', (e) => {
-                    projectData.todos[taskIndex].removeChecklistItem(index)
+                    filterData[taskIndex].removeChecklistItem(index)
                     this.projectManager.save()
                     this.renderTasks(project, filter)
                 })
@@ -289,7 +303,7 @@ class UiManager{
 
             addCheckListButton.addEventListener('click', (e) => {
                 const value = addCheckListInput.value
-                projectData.todos[taskIndex].addChecklistItem(value)
+                filterData[taskIndex].addChecklistItem(value)
                 this.projectManager.save()
                 this.renderTasks(project, filter)
             })
@@ -300,9 +314,50 @@ class UiManager{
             checklist.appendChild(addCheckList)
             mainCard.appendChild(checklist)
             
-            this.contentDiv.appendChild(card)
             // make and assign buttons
+            const buttonsDiv = document.createElement('div')
+            buttonsDiv.className = 'buttons'
+            
+            const buttonsInput = document.createElement('input')
+            buttonsInput.value = format(p.date, 'yyyy-MMM-dd')
+            buttonsInput.disabled = true
+            
+            const sideButtons = document.createElement('div')
+            const select = document.createElement('select')
+            for (const name of ['High', 'Medium', 'Low']){
+                const option = document.createElement('option')
+                option.value = name
+                option.innerText = name
+                option.selected = p.priority == name
+                select.appendChild(option)
+            }
+            select.addEventListener('change', (e) =>{
+                const priority = e.target.value
+                filterData[taskIndex].edit({priority})
+                this.projectManager.save()
+                this.renderTasks()
+
+            })
+            const deleteTask = document.createElement('button')
+            let deleteTaskImg = document.createElement('img')
+            deleteTaskImg.src = deleteIcon
+            deleteTaskImg.width = '24'
+            deleteTaskImg.alt = "delete Task icon" 
+            deleteTask.addEventListener('click', (e) => {
+                let todo = filterData[taskIndex]
+                let index = projectData.todos.indexOf(todo)
+                projectData.deleteTodo(index)
+                this.projectManager.save()
+                this.renderTasks()
+            })
+            deleteTask.appendChild(deleteTaskImg)
+            sideButtons.appendChild(select)
+            sideButtons.appendChild(deleteTask)
+            buttonsDiv.appendChild(buttonsInput)
+            buttonsDiv.appendChild(sideButtons)
+            card.appendChild(buttonsDiv)
             // make button div and assign all functionS
+            this.contentDiv.appendChild(card)
         });
 
 
@@ -365,8 +420,6 @@ class UiManager{
         this.projectDialogClose.addEventListener('click', () => this.projectDialog.close())
         this.taskFormButton.addEventListener('submit', (e) => this.handleTaskForm(e))
         this.projectFormButton.addEventListener('submit', (e) => this.handleProjectForm(e))
-
-        // TODO assign card buttons
     }
 
     handleTaskForm(e){
@@ -378,6 +431,11 @@ class UiManager{
         const projectName = data.project
         if (this.projectManager.projects.find(p => p.name == projectName)){
             let project = this.projectManager.projects.find(p => p.name == projectName)
+            let date =  dateParse(data.date, 'yyyy-MM-dd', new Date())
+            if (date < new Date()){
+                alert('Tasks cant be made in past sorry')
+                return
+            }
             project.addTodo(data.title, data.desc, data.date, data.priority, data.notes) 
             this.projectManager.save()
             this.renderTasks(projectName, 'all')
@@ -400,6 +458,7 @@ class UiManager{
     }
 
     renderTaskSelection(){
+        this.taskProjectSelection.innerHTML = ''
         for (const project  of this.projectManager.projects){
             const projectName = project.name
             const option = document.createElement('option')

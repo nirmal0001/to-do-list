@@ -91,6 +91,8 @@ ul {
 ul > li {
     display: flex;
     gap: 4px;
+    text-wrap-mode: nowrap;
+
 }
 /* sidebar nav css end */
 
