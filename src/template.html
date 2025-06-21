@@ -41,88 +41,89 @@
     <h2>Tasks</h2>
     <div class="content">
       <div data-project="default" id="delete-project"><span>delete project</span><img width="24px" src="assets/icons/delete.svg" alt="delete project button"></div>
-      <div data-group="default" data-task-id="3" class="card">
-      <!-- This has to match the ID of the task in the array -->
-        <h3 class="card-title">Shopping list</h3>
+      <div class="cards">
+        <div data-group="default" data-task-id="3" class="card">
+        <!-- This has to match the ID of the task in the array -->
+          <h3 class="card-title">Shopping list</h3>
 
-        <div class="card-main">
-          <div class="desc">I need to buy some grocery from Vishal Mega Mart</div>
-          <div class="note">Make sure to get ketchup</div>
+          <div class="card-main">
+            <div class="desc">I need to buy some grocery from Vishal Mega Mart</div>
+            <div class="note">Make sure to get ketchup</div>
 
-          <div class="checklist">
-            <ul class="checklist-list">
-              <li>
-                <input
-                  type="checkbox"
-                  data-selected="checkbox"
+            <div class="checklist">
+              <ul class="checklist-list">
+                <li>
+                  <input
+                    type="checkbox"
+
+                    checked
+                  >
+                  <span>Tomato</span>
+                  <img
+                    src="assets/icons/delete.svg"
+                    width="16px"
+                    alt="delete checklist item"
+                    data-selected="delete-checklist"
+                    data-task-id="3"
+                    data-project="default"
+                    data-checklist-id="1"
+                  >
+                </li>
+              </ul>
+              <div class="add-checklist">
+                <input type="text">
+                <button
+                  type="button"
+                  data-action="add-checklist"
                   data-task-id="3"
                   data-project="default"
-                  data-checklist-id="1"
-                  checked
                 >
-                <span>Tomato</span>
-                <img
-                  src="assets/icons/delete.svg"
-                  width="16px"
-                  alt="delete checklist item"
-                  data-selected="delete-checklist"
-                  data-task-id="3"
-                  data-project="default"
-                  data-checklist-id="1"
-                >
-              </li>
-            </ul>
+                <img src="assets/icons/add-circle.svg" alt="add checklist item" width="24px">
+              </button>
+              </div>
+            </div>
+          </div>
 
-            <button
-              type="button"
-              data-action="add-checklist"
+          <div class="buttons">
+          <input type="date" disabled value="2000-10-20">
+
+          <div data-task-id="3">
+            <select
+              data-type="priority"
+              name="priority"
               data-task-id="3"
               data-project="default"
             >
-              <img src="assets/icons/add-circle.svg" alt="add checklist item" width="24px">
-              Add item
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+
+            <button
+              type="button"
+              data-selected="edit"
+              data-task-id="3"
+              data-project="default"
+            >
+              <img src="assets/icons/edit.svg" alt="edit button" width="24px">
+            </button>
+
+            <button
+              type="button"
+              data-selected="delete"
+              data-task-id="3"
+              data-project="default"
+            >
+              <img src="assets/icons/delete.svg" alt="delete button" width="24px">
             </button>
           </div>
         </div>
 
-        <div class="buttons">
-        <input type="date" disabled value="2000-10-20">
-
-        <div data-task-id="3">
-          <select
-            data-type="priority"
-            name="priority"
-            data-task-id="3"
-            data-project="default"
-          >
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
-          </select>
-
-          <button
-            type="button"
-            data-selected="edit"
-            data-task-id="3"
-            data-project="default"
-          >
-            <img src="assets/icons/edit.svg" alt="edit button" width="24px">
-          </button>
-
-          <button
-            type="button"
-            data-selected="delete"
-            data-task-id="3"
-            data-project="default"
-          >
-            <img src="assets/icons/delete.svg" alt="delete button" width="24px">
-          </button>
         </div>
       </div>
 
-      </div>
     </div>
-      <!-- dialogs for task and projectt form -->
+      <!-- dialogs for task and project form -->
     <dialog class="task-dialog">
       <div class="title">
           <h3>add task</h3> <img class="dialog-close" src="assets/icons/close.svg" alt="close button" width="24px">

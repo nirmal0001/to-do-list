@@ -106,7 +106,7 @@ main h2 {
     font-size: 2.5rem;
 }
 
-.content {
+.cards {
     display: grid;
     grid-template: repeat(auto-fit, clamp(300px, 20vh, 600px)) / repeat(2, clamp(350px, 40vw, 800px));
     gap: 10px;
@@ -149,6 +149,10 @@ main h2 {
 .checklist-list > li > span {
     flex: 1;
 }
+
+.add-checklist {
+    display: flex;
+}
 .desc {
     padding: 5px;
     font-size: 1.2rem;
@@ -161,7 +165,7 @@ main h2 {
 
 /* end main css */
 
-/* diloag css */
+/* dialog css */
 
 dialog {
     display: flex;

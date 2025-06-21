@@ -1,9 +1,9 @@
 import "./reset.css"
 import "./styles.css"
 
-// import "./dilog.js"
-// import {form } from "./dilog.js"
 import projectIcon from "./assets/icons/projects.svg"
+import deleteIcon from "./assets/icons/delete.svg"
+import addCircleIcon from "./assets/icons/add-circle.svg"
 import { parse as dateParse , format} from "date-fns"
 // Classes:
 // - Todo
@@ -13,20 +13,21 @@ class Todo{
     constructor(title, desc, date, priority, notes, checklist = [], done = false){
         this.title = title
         this.desc = desc
-        this.date = this.setDate(date)
+        this.date = ''
         this.priority = priority
         this.notes = notes
         this.checklist = checklist
         this.done = done
+        this.setDate(date)
     }
 
     setDate(date){
         if (date instanceof Date && !isNaN(date)) {
-            return date;
+            this.date = date;
         }
 
         try {
-            return dateParse(date, 'yyyy-MM-dd', new Date())
+            this.date = dateParse(date, 'yyyy-MM-dd', new Date())
         } catch (error) {
             throw new Error("Invalid date format");
         }
@@ -143,7 +144,7 @@ class ProjectManager {
 
     resetProject(name) {
         let defaultProject = this.projects.find(p => p.name === name);
-        defaultProject = [];
+        defaultProject.todos = [];
         this.save();
     }
 
@@ -173,16 +174,18 @@ class UiManager{
         this.projectDeleteButton = document.querySelector('#delete-project')
 
         // main content
-        this.contentDiv = document.querySelector('.content')
+        this.contentDiv = document.querySelector('.cards')
 
         // manager
         this.projectManager = new ProjectManager()
+        window.projectM = this.projectManager
 
-        // forms and dilog
+        // forms and dialog
+        // TODO assign edit form and dialog
         this.taskFormButton = document.querySelector('#task-selection')
         this.taskDialog = document.querySelector('.task-dialog')
         this.taskDialogClose = document.querySelector('.dialog-close')
-        this.taskProjectSelction = document.querySelector('select[name="project"')
+        this.taskProjectSelection = document.querySelector('select[name="project"')
         this.projectFormButton = document.querySelector('#project-selection')
         this.projectDialog = document.querySelector('.project-dialog')
         this.projectDialogClose = document.querySelector('.dialog-close2')
@@ -207,9 +210,107 @@ class UiManager{
     }
 
     renderTasks(project='default', filter='all'){
+        // empty the content
+        // this.contentDiv.innerHTML = ''
         // render notes + update delete project button
         this.projectDeleteButton.dataset.project = project
+        let projectData = this.projectManager.projects.find(p => p.name == project)
+        projectData.todos.forEach((p, taskIndex) => {
+            // create outer div 
+            let card = document.createElement('div')
+            card.dataset.group = project
+            card.dataset.taskId = taskIndex
+            card.className = 'card'
+
+            // create title
+            let title = document.createElement('h3')
+            title.className = "card-title"
+            title.innerText = p.title
+            card.appendChild(title)
+
+            // create main div
+            let mainCard = document.createElement('div')
+            mainCard.className = 'card-main'
+            card.appendChild(mainCard)
+
+            // create desc and note
+            let desc = document.createElement('div')
+            let note = document.createElement('div')
+            desc.className = 'desc'
+            desc.innerText = p.desc
+            note.className = 'note'
+            note.innerText = p.title
+            mainCard.appendChild(desc)
+            mainCard.appendChild(note)
+            
+            // create checklist
+            let checklist = document.createElement('div')
+            checklist.className = 'checklist'
+
+            let checklistList = document.createElement('ul')
+            checklistList.className = 'checklist-list'
+            // TODO filter bellow list later
+            p.checklist.forEach((p, index) => {
+                let li = document.createElement('li')
+                let input = document.createElement('input')
+                input.type = "checkbox"
+                input.checked = p.checked
+                let span = document.createElement('span')
+                span.innerText = p.text
+                let img = document.createElement('img')
+                img.src = deleteIcon
+                img.width = '16'
+                img.alt = "delete checklist icon"
+                img.dataset.project = project               
+                li.appendChild(input)
+                li.appendChild(span)
+                li.appendChild(img)
+                checklistList.appendChild(li)
+                input.addEventListener('click', (e) => {
+                    projectData.todos[taskIndex].checklist[index].checked = e.currentTarget.checked
+                    this.projectManager.save()
+                    this.renderTasks(project, filter)
+                })
+                img.addEventListener('click', (e) => {
+                    projectData.todos[taskIndex].removeChecklistItem(index)
+                    this.projectManager.save()
+                    this.renderTasks(project, filter)
+                })
+
+            })
+            let addCheckList = document.createElement('div')
+            addCheckList.className = 'add-checklist'
+            let addCheckListInput = document.createElement('input')
+            let addCheckListButton = document.createElement('button')
+            let addCheckListImg  = document.createElement('img')
+            addCheckListImg.src = addCircleIcon
+            addCheckListImg.width = 24
+            addCheckListImg.alt = 'add checklist item button'
+
+            addCheckListButton.addEventListener('click', (e) => {
+                const value = addCheckListInput.value
+                projectData.todos[taskIndex].addChecklistItem(value)
+                this.projectManager.save()
+                this.renderTasks(project, filter)
+            })
+            addCheckListButton.appendChild(addCheckListImg)
+            addCheckList.appendChild(addCheckListInput)
+            addCheckList.appendChild(addCheckListButton)
+            checklist.appendChild(checklistList)
+            checklist.appendChild(addCheckList)
+            mainCard.appendChild(checklist)
+            
+            this.contentDiv.appendChild(card)
+            // make and assign buttons
+            // make button div and assign all functionS
+        });
+
+
         // TODO complete this
+        // assign all button event
+        // assign dialog and edit form data function
+        // need to make update todo using edit function in todo
+        // save the project and render
     }
 
     renderSidebar(){
@@ -253,20 +354,19 @@ class UiManager{
                 const answer = confirm(`Press OK to delete the project: "${projectName}".`);
                 if (answer === true) {
                     this.projectManager.deleteProject(projectName);
-                    this.render('default')
-                    // remove from task dilog form
-              
+                    this.render('default')              
                 }
             }
         });
 
-        // assign dialog and formus
         this.createTaskButton.addEventListener('click', () => this.taskDialog.showModal())
         this.taskDialogClose.addEventListener('click', () => this.taskDialog.close())
         this.createProjectButton.addEventListener('click', () => this.projectDialog.showModal())
         this.projectDialogClose.addEventListener('click', () => this.projectDialog.close())
         this.taskFormButton.addEventListener('submit', (e) => this.handleTaskForm(e))
         this.projectFormButton.addEventListener('submit', (e) => this.handleProjectForm(e))
+
+        // TODO assign card buttons
     }
 
     handleTaskForm(e){
@@ -275,7 +375,15 @@ class UiManager{
         const data = Object.fromEntries(formData.entries());
         console.log(data)
         this.taskDialog.close()
-        // TODO work on this and render tasks
+        const projectName = data.project
+        if (this.projectManager.projects.find(p => p.name == projectName)){
+            let project = this.projectManager.projects.find(p => p.name == projectName)
+            project.addTodo(data.title, data.desc, data.date, data.priority, data.notes) 
+            this.projectManager.save()
+            this.renderTasks(projectName, 'all')
+            return
+        }
+        alert('project does not exists')
     }
 
     handleProjectForm(e){
@@ -297,19 +405,10 @@ class UiManager{
             const option = document.createElement('option')
             option.innerText= projectName
             option.value = projectName
-            this.taskProjectSelction.appendChild(option)
+            this.taskProjectSelection.appendChild(option)
         }
     }
 }
 
 const manager = new UiManager()
 manager.init()
-// - UI Module
-//   - takes default project name to re render page full
-//   - display projects, todos, and forms
-//   - display only toady todos or upcoming when clcked
-//   - chnage project when clicked
-//   - delete project by clicking on top delet button
-//   - handle click on add delete edit on todos
-//   - hanlde click on project add delete
-// make a commit befor js
